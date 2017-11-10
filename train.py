@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from skimage.io import imread, imsave
 from skimage.transform import resize
-from imgaug import augmenters as iaa
+#from imgaug import augmenters as iaa
 
 from sklearn.model_selection import train_test_split
 from keras.utils.np_utils import to_categorical
@@ -29,6 +29,11 @@ csv_file = 'csv_files/prod_to_category.csv'
 
 df = pd.read_csv(csv_file)
 product_ids, category_ids, n_pics = df['product_id'], df['category_id'], df['n_pics']
+# 10000
+# product_ids = product_ids[:10000]
+# category_ids = category_ids[:10000]
+# n_pics = n_pics[:10000]
+
 product_ids = np.array(product_ids, np.uint32)
 category_ids = np.array(category_ids, np.uint32)
 n_pics = np.array(n_pics, np.uint8)
@@ -104,7 +109,7 @@ def train_generator():
                 img = imread(img)
                 assert img is not None, 'Failed to read image'
                 img = img[:, :, :3]
-                img = resize(img, (height, width), preserve_range=True)
+                img = resize(img, (height, width), preserve_range=True, mode='constant')
                 # img = augmenter(img, u=0.5)
                 # imsave(os.path.join(base_dir, 'augs',  product_imgs_train_batch[sample] + '.png'), img / 255)
                 x_batch.append(img)
@@ -129,7 +134,7 @@ def valid_generator():
                 img = imread(img)
                 assert img is not None, 'Failed to read image'
                 img = img[:, :, :3]
-                img = resize(img, (height, width), preserve_range=True)
+                img = resize(img, (height, width), preserve_range=True, mode='constant')
                 x_batch.append(img)
                 label_index = categories_to_labels[category_ids_test_arr_batch[sample]]
                 label = categorical_labels[label_index]

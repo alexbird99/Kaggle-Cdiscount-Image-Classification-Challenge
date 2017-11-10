@@ -1,0 +1,7 @@
+input/
+train_images/
+test_images/
+.vscode/
+__pycache__/
+csv_files/
+weights/
